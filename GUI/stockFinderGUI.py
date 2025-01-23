@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 import os
 import sys
 import tkinter as tk
@@ -10,6 +11,8 @@ import sv_ttk
 import pywinstyles
 from email.mime.text import MIMEText
 
+
+
 # ADD PATH
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -19,8 +22,9 @@ from logic.zaraStockFinder import checkStockZara
 from logic.bershkaStockFinder import checkStockBershka
 
 # EMAIL INFORMATION
-EMAIL_ADDRESS = "example@gmail.com"  # MAIL ADDRESS
-EMAIL_PASSWORD = "jwci hsjw pmmk nzzz"   # MAIL APPLICATION PASSWORD (YOU CAN USE GMAIL FOR THIS)
+load_dotenv()
+EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
 auto_check_interval = 180  # Default 3 hours
 
