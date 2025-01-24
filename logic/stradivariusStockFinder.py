@@ -8,30 +8,12 @@ from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from util.createDriver import create_driver
+from util.pageSource import fetch_page_source
 
 def check_stockStradivarius(url, size):
-    try:
-        driver = create_driver()
-        driver.get(url)
+    
+    soup = fetch_page_source(url, wait_time=random.randint(5, 10))
 
-        # Dinamik içerik için sayfanın tam yüklenmesini bekleme (örneğin 5 saniye)
-        time.sleep(random.randint(5, 10))
-
-        # Sayfa kaynağını al
-        page_source = driver.page_source
-        
-        # Sayfa içeriğini BeautifulSoup ile parse et
-        soup = BeautifulSoup(page_source, 'html.parser')
-    except Exception as e:
-        print(f"Hata oluştu: {e}")
-        return None
-
-    finally:
-        driver.quit()  # WebDriver'ı kapat
-
-    if not soup:
-        return "Sayfa yüklenemedi."
     if not soup:
         return "Sayfa yüklenemedi."
 
@@ -55,36 +37,3 @@ def check_stockStradivarius(url, size):
                 return f"{size} bedeni için stokta bulundu."
     
     return f"{size} bedeni bulunamadı."
-
-""" # Örnek kullanım
-url = "https://www.stradivarius.com/tr/z%C4%B1mbal%C4%B1-babet-l19616470?colorId=040&style=12&pelement=436141585"
-size = "41"  # Kullanıcıdan alınan beden
-
-# Stok durumu kontrol et
-stock_status = check_stock(url, size)
-print(stock_status) """
-
-
-
-""" def scrape_website(url):
-    try:
-        driver = create_driver()
-        driver.get(url)
-
-        # Dinamik içerik için sayfanın tam yüklenmesini bekleme (örneğin 5 saniye)
-        time.sleep(random.randint(5, 10))
-
-        # Sayfa kaynağını al
-        page_source = driver.page_source
-        
-        # Sayfa içeriğini BeautifulSoup ile parse et
-        soup = BeautifulSoup(page_source, 'html.parser')
-
-        return soup
-
-    except Exception as e:
-        print(f"Hata oluştu: {e}")
-        return None
-
-    finally:
-        driver.quit()  # WebDriver'ı kapat """

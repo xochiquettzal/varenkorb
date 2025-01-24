@@ -4,30 +4,11 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
-from util.createDriver import create_driver
+from util.pageSource import fetch_page_source
 
 def checkStockBershka(url, size):
-    try:
-        driver = create_driver()
-        driver.get(url)
+    soup = fetch_page_source(url, wait_time=random.randint(5, 10))
 
-        # Dinamik içerik için sayfanın tam yüklenmesini bekleme (örneğin 5 saniye)
-        time.sleep(random.randint(5, 10))
-
-        # Sayfa kaynağını al
-        page_source = driver.page_source
-        
-        # Sayfa içeriğini BeautifulSoup ile parse et
-        soup = BeautifulSoup(page_source, 'html.parser')
-    except Exception as e:
-        print(f"Hata oluştu: {e}")
-        return None
-
-    finally:
-        driver.quit()  # WebDriver'ı kapat
-
-    if not soup:
-        return "Sayfa yüklenemedi."
     if not soup:
         return "Sayfa yüklenemedi."
     
@@ -37,17 +18,20 @@ def checkStockBershka(url, size):
         return "Beden seçici bulunamadı."
     
     # Butonları bul
-    buttons = size_selector_div.find_all('button')
+    lis = size_selector_div.find_all('li')
     
-    for button in buttons:
+    for li in lis:
         # Span içindeki beden text'ini bul
-        span = button.find('span', class_='text__label')
+        span = li.find('span', class_='text__label')
         if span and span.text.strip() == size:  # Beden eşleşiyorsa
-            button_class = button.get('class', [])
+            li_class = li.get('class', [])
             # Stok durumuna göre döndür
-            if 'cursor-default' in button_class and 'is-disabled' in button_class:
+            if 'is-csbs is-disabled ui--size-dot-list__item--last' in li_class or 'is-disabled' in li_class or 'is-disabled ui--size-dot-list__item--last' in li_class or 'is-csbs is-disabled' in li_class:
                 return f"{size} bedeni için stok bulunamadı."
-            elif 'ui--dot-item' in button_class and 'is-dot' in button_class:
+            elif 'is-last-units' in li_class or 'ui--size-dot-list__item--last' in li_class or 'is-last-units ui--size-dot-list__item--last' in li_class or not li_class:
                 return f"{size} bedeni için stokta bulundu."
     
     return f"{size} bedeni bulunamadı."
+
+
+checkStockBershka("https://www.bershka.com/tr/fitilli-%C3%B6rg%C3%BC-kazak-c0p177326330.html?colorId=251", "XS")
