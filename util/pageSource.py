@@ -34,3 +34,22 @@ def fetch_page_source(url, wait_time=5):
         return None
     finally:
         driver.quit()
+
+def fetch_page_with_driver(url, wait_time=5):
+    """
+    Verilen URL'den Selenium ile sayfa kaynağını getirir ve driver'ı döner.
+    Args:
+        url (str): Açılacak URL.
+        wait_time (int): Sayfanın yüklenmesi için bekleme süresi.
+    Returns:
+        tuple: (BeautifulSoup, driver) - Sayfa kaynağı ve driver'ı döner.
+    """
+    try:
+        driver = create_driver()
+        driver.get(url)
+        time.sleep(wait_time)  # Sayfanın yüklenmesi için bekleme süresi
+        page_source = driver.page_source
+        return BeautifulSoup(page_source, 'html.parser'), driver
+    except Exception as e:
+        print(f"Hata oluştu: {e}")
+        return None, None

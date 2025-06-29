@@ -1,0 +1,6 @@
+python-dotenv
+selenium
+beautifulsoup4
+sv-ttk
+pywinstyles
+requests
